@@ -42,6 +42,7 @@ class GoogleReviewItemSchema(BaseModel):
             return value
         return dateparser.parse(value)
 
+
 class GoogleReviewsSchema(BaseModel):
     items: List[dict]
 

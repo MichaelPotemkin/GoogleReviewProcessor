@@ -36,11 +36,13 @@ class GoogleReviewsService:
     def get_root_domain(url):
         """Get the root domain from the url"""
         parsed_url = urlparse(url)
-        domain_parts = parsed_url.netloc.split('.')
-        return '.'.join(domain_parts[-2:])
+        domain_parts = parsed_url.netloc.split(".")
+        return ".".join(domain_parts[-2:])
 
     @classmethod
-    def remove_duplicates(cls, data: GoogleReviewsResultsSchema) -> GoogleReviewsResultsSchema:
+    def remove_duplicates(
+        cls, data: GoogleReviewsResultsSchema
+    ) -> GoogleReviewsResultsSchema:
         """Remove duplicate items from the data regardless of subdomains"""
         unique_items = []
         unique_main_domains = set()
