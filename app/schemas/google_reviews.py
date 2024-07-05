@@ -42,12 +42,6 @@ class GoogleReviewItemSchema(BaseModel):
             return value
         return dateparser.parse(value)
 
-    class Config:
-        allow_population_by_field_name = True
-        # By default, field names will be used during serialization
-        alias_generator = None
-
-
 class GoogleReviewsSchema(BaseModel):
     items: List[dict]
 
@@ -90,7 +84,3 @@ class GoogleReviewsRequestSchema(GoogleReviewsInputSchema):
 
 class GoogleReviewsResultsSchema(BaseModel):
     items: list[GoogleReviewItemSchema]
-
-    class Config:
-        allow_population_by_field_name = True
-        alias_generator = None

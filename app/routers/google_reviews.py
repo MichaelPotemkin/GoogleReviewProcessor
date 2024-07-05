@@ -2,13 +2,18 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 
-from app.schemas.google_reviews import GoogleReviewsInputSchema, GoogleReviewsResultsSchema
+from app.schemas.google_reviews import (
+    GoogleReviewsInputSchema,
+    GoogleReviewsResultsSchema,
+)
 from app.services.google_reviews import GoogleReviewsService
 
 router = APIRouter()
 
 
-@router.get("/reviews", response_model=GoogleReviewsResultsSchema)
+@router.get(
+    "/reviews", response_model_by_alias=False, response_model=GoogleReviewsResultsSchema
+)
 async def get_reviews(
     query: str,
     cx: str,
@@ -27,4 +32,5 @@ async def get_reviews(
             The sort parameter
     """
     data = GoogleReviewsInputSchema(query=query, cx=cx, sort=sort)
-    return await service.get_reviews(data)
+    result = await service.get_reviews(data)
+    return result

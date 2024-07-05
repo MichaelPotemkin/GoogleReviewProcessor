@@ -29,7 +29,7 @@ class GoogleReviewsService:
             item["article:published_time"] = item["pagemap"]["metatags"][0].pop(
                 "article:published_time", None
             )
-        return GoogleReviewsResultsSchema(**data.dict())
+        return GoogleReviewsResultsSchema(**data.model_dump())
 
     @staticmethod
     def remove_duplicates(
@@ -37,11 +37,12 @@ class GoogleReviewsService:
     ) -> GoogleReviewsResultsSchema:
         """Remove duplicate items from the data"""
         unique_items = []
-        unique_urls = set()
+        unique_domains = set()
         for item in data.items:
-            if item.url_from not in unique_urls:
+            if item.domain_from not in unique_domains:
                 unique_items.append(item)
-                unique_urls.add(item["url_from"])
+                unique_domains.add(item.domain_from)
+
         return GoogleReviewsResultsSchema(items=unique_items)
 
     async def get_reviews_from_pages(
@@ -52,7 +53,7 @@ class GoogleReviewsService:
         responses = await asyncio.gather(
             *[
                 self.client.get_reviews(
-                    GoogleReviewsRequestSchema(**request_data.dict(), start=start)
+                    GoogleReviewsRequestSchema(**request_data.model_dump(), start=start)
                 )
                 for start in range(1, number_of_pages * 10 + 1, 10)
             ]
@@ -65,7 +66,7 @@ class GoogleReviewsService:
         self, request_data: GoogleReviewsInputSchema
     ) -> GoogleReviewsResultsSchema:
         google_reviews = await self.get_reviews_from_pages(
-            request_data, number_of_pages=1
+            request_data, number_of_pages=10
         )
         result = self.parse_results(google_reviews)
-        return result
+        return self.remove_duplicates(result)
