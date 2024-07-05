@@ -1,13 +1,8 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+from app.routers import api_router
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+app = FastAPI(
+    title="GoogleReviewProcessor API",
+)
+app.include_router(api_router, prefix="/v1")

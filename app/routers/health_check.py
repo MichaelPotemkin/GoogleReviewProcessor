@@ -1,7 +1,9 @@
-from app.routers.google_reviews import router
+from fastapi import APIRouter
+
+router = APIRouter()
 
 
-@router.get("/health_check")
+@router.get("/")
 async def get_health_check():
     """
     Healthcheck endpoint to check if the service is alive.
