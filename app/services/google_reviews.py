@@ -1,4 +1,5 @@
 import asyncio
+from urllib.parse import urlparse
 
 from app.clients.google_reviews import GoogleReviewsClient
 from app.schemas.google_reviews import (
@@ -32,16 +33,23 @@ class GoogleReviewsService:
         return GoogleReviewsResultsSchema(**data.model_dump())
 
     @staticmethod
-    def remove_duplicates(
-        data: GoogleReviewsResultsSchema,
-    ) -> GoogleReviewsResultsSchema:
-        """Remove duplicate items from the data"""
+    def get_root_domain(url):
+        """Get the root domain from the url"""
+        parsed_url = urlparse(url)
+        domain_parts = parsed_url.netloc.split('.')
+        return '.'.join(domain_parts[-2:])
+
+    @classmethod
+    def remove_duplicates(cls, data: GoogleReviewsResultsSchema) -> GoogleReviewsResultsSchema:
+        """Remove duplicate items from the data regardless of subdomains"""
         unique_items = []
-        unique_domains = set()
+        unique_main_domains = set()
+
         for item in data.items:
-            if item.domain_from not in unique_domains:
+            main_domain = cls.get_root_domain(item.url_from)
+            if main_domain not in unique_main_domains:
                 unique_items.append(item)
-                unique_domains.add(item.domain_from)
+                unique_main_domains.add(main_domain)
 
         return GoogleReviewsResultsSchema(items=unique_items)
 
