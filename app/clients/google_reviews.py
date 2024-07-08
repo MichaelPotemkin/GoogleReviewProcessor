@@ -28,4 +28,5 @@ class GoogleReviewsClient:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 data = await response.json()
-                return GoogleReviewsSchema(**data)
+                items = data.get("items", [])
+                return GoogleReviewsSchema(items=items)
