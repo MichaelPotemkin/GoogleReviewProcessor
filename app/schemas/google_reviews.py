@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List, Optional
 
 import dateparser
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, validator
 
 
 class GoogleReviewItemSchema(BaseModel):
@@ -36,7 +36,7 @@ class GoogleReviewItemSchema(BaseModel):
         alias="article:published_time", default=None
     )
 
-    @validator("published_date", pre=True, always=True)
+    @field_validator("published_date", mode="before")
     def parse_published_date(cls, value):
         if value is None:
             return value
@@ -76,7 +76,7 @@ class GoogleReviewsRequestSchema(GoogleReviewsInputSchema):
 
     start: int = 1
 
-    @validator("start")
+    @field_validator("start")
     def validate_start(cls, v):
         if not 1 <= v <= 100:
             raise ValueError("Start must be between 1 and 100")
