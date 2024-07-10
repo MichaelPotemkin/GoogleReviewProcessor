@@ -5,7 +5,7 @@ import aiohttp
 
 from app.core.config import settings
 from app.schemas.valueserp_search import (
-    TimePeriod,
+    TimePeriodSchema,
     ValueserpRequestSchema,
     ValueserpResponseSchema,
 )
@@ -21,7 +21,7 @@ class ValueserpClient:
         query: str,
         page: int,
         num: int,
-        time_period: Optional[TimePeriod] = None,
+        time_period: Optional[TimePeriodSchema] = None,
     ) -> str:
         params = {
             "api_key": cls.API_KEY,
@@ -31,8 +31,8 @@ class ValueserpClient:
         }
         if time_period:
             params["time_period"] = "custom"
-            params["min_time"] = time_period.min_time
-            params["max_time"] = time_period.max_time
+            params["time_period_min"] = time_period.min_time.date().strftime("%m-%d-%Y")
+            params["time_period_max"] = time_period.max_time.date().strftime("%m-%d-%Y")
 
         return f"{cls.BASE_URL}?{urlencode(params)}"
 

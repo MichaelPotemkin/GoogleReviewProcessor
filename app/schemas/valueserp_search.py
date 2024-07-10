@@ -4,7 +4,17 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 
-class TimePeriod(BaseModel):
+class TimePeriodSchema(BaseModel):
+    """
+    Schema for Time Period.
+
+    Attributes:
+        min_time: datetime
+            The lower bound of the time period
+        max_time: datetime
+            The upper bound of the time period
+    """
+
     min_time: datetime
     max_time: datetime
 
@@ -62,6 +72,8 @@ class ValueserpPaginationSchema(BaseModel):
     """
 
     api_pagination: ValueserpAPIPaginationSchema
+    next: Optional[str]
+    other_pages: Optional[List[ValueserpPageSchema]]
 
 
 class ValueserpResponseSchema(BaseModel):
@@ -75,10 +87,17 @@ class ValueserpResponseSchema(BaseModel):
             The list of search results
     """
 
-    pagination: ValueserpPaginationSchema
+    pagination: Optional[ValueserpPaginationSchema] = Field(default=None)
     items: Optional[List[ValueserpItemSchema]] = Field(
         alias="organic_results", default=[]
     )
+
+    def has_other_pages(self):
+        return (
+            self.pagination
+            and self.pagination.api_pagination
+            and self.pagination.api_pagination.other_pages
+        )
 
 
 class ValueserpInputSchema(BaseModel):
@@ -93,7 +112,7 @@ class ValueserpInputSchema(BaseModel):
     """
 
     query: str
-    time_period: Optional[TimePeriod] = None
+    time_period: Optional[TimePeriodSchema] = None
 
 
 class ValueserpRequestSchema(ValueserpInputSchema):

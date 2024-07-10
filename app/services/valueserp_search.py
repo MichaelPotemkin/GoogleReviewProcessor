@@ -55,15 +55,14 @@ class ValueserpService:
         initial_request_data = ValueserpRequestSchema(**data.model_dump())
         initial_response = await self.client.search(initial_request_data)
 
-        other_pages = initial_response.pagination.api_pagination.other_pages
         responses = [initial_response]
-        if other_pages:
+        if initial_response.has_other_pages():
             additional_responses = await asyncio.gather(
                 *[
                     self.client.search(
                         ValueserpRequestSchema(**data.model_dump(), page=page.page)
                     )
-                    for page in other_pages
+                    for page in initial_response.pagination.api_pagination.other_pages
                 ]
             )
             responses.extend(additional_responses)
