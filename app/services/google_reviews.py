@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import urllib.parse
 
 import tldextract
@@ -11,6 +10,7 @@ from app.schemas.google_reviews import (
     GoogleReviewsResultsSchema,
     GoogleReviewsSchema,
 )
+from app.services.utilities import extract_domain
 
 
 class GoogleReviewsService:
@@ -35,11 +35,6 @@ class GoogleReviewsService:
             )
         return GoogleReviewsResultsSchema(**data.model_dump())
 
-    @staticmethod
-    def get_root_domain(url):
-        parsed_url = urllib.parse.urlparse(url)
-        extracted = tldextract.extract(parsed_url.netloc)
-        return "{}.{}".format(extracted.domain, extracted.suffix)
 
     @classmethod
     def remove_duplicates(
@@ -50,7 +45,7 @@ class GoogleReviewsService:
         unique_main_domains = set()
 
         for item in data.items:
-            main_domain = cls.get_root_domain(item.url_from)
+            main_domain = extract_domain(item.url_from, include_subdomain=False)
             if main_domain not in unique_main_domains:
                 unique_items.append(item)
                 unique_main_domains.add(main_domain)

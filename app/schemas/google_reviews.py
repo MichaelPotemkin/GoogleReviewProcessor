@@ -44,6 +44,13 @@ class GoogleReviewItemSchema(BaseModel):
 
 
 class GoogleReviewsSchema(BaseModel):
+    """
+    Schema for search results returned by the Google API
+
+    Attributes:
+        items: List[dict]
+            The list of dictionaries, each dictionary representing a search result
+    """
     items: List[dict]
 
 
@@ -84,4 +91,11 @@ class GoogleReviewsRequestSchema(GoogleReviewsInputSchema):
 
 
 class GoogleReviewsResultsSchema(BaseModel):
+    """
+    Output Schema for Google Reviews Results. Contains a list of filtered results from the Google API.
+
+    Attributes:
+        items: list[GoogleReviewItemSchema]
+            The list of items
+    """
     items: list[GoogleReviewItemSchema]

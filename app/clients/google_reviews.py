@@ -1,4 +1,5 @@
 from typing import Optional
+from urllib.parse import urlencode
 
 import aiohttp
 
@@ -14,13 +15,23 @@ class GoogleReviewsClient:
 
     @classmethod
     def construct_url(
-        cls, query: str, cx: str, sort: Optional[str] = None, start: Optional[int] = 1
+            cls, query: str, cx: str, sort: Optional[str] = None, start: Optional[int] = 1
     ) -> str:
         if not 1 <= start <= 100:
             raise ValueError("Start must be between 1 and 100")
-        result = f"{cls.BASE_URL}?key={cls.API_KEY}&q={query}&cx={cx}&start={start}"
+
+        params = {
+            'key': cls.API_KEY,
+            'q': query,
+            'cx': cx,
+            'start': start
+        }
+
         if sort:
-            result += f"&sort={sort}"
+            params['sort'] = sort
+
+        result = f"{cls.BASE_URL}?{urlencode(params)}"
+
         return result
 
     async def get_reviews(
