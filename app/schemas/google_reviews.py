@@ -51,6 +51,7 @@ class GoogleReviewsSchema(BaseModel):
         items: List[dict]
             The list of dictionaries, each dictionary representing a search result
     """
+
     items: List[dict]
 
 
@@ -98,4 +99,5 @@ class GoogleReviewsResultsSchema(BaseModel):
         items: list[GoogleReviewItemSchema]
             The list of items
     """
+
     items: list[GoogleReviewItemSchema]

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, model_validator, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class TimePeriod(BaseModel):
@@ -20,6 +20,7 @@ class ValueserpItemSchema(BaseModel):
     """
     Schema for a single item in the Valueserp API results.
     """
+
     page_from_title: str = Field(alias="title")
     url_from: str = Field(alias="link")
     domain_from: str = Field(alias="domain")
@@ -33,6 +34,7 @@ class ValueserpSearchResultsSchema(BaseModel):
         items: list[GoogleReviewItemSchema]
             The list of items
     """
+
     items: List[ValueserpItemSchema]
 
 
@@ -40,6 +42,7 @@ class ValueserpPageSchema(BaseModel):
     """
     Schema for a single page in the Valueserp API pagination.
     """
+
     page: int
     link: str
 
@@ -48,6 +51,7 @@ class ValueserpAPIPaginationSchema(BaseModel):
     """
     Pagination schema for Valueserp API.
     """
+
     next: Optional[str]
     other_pages: Optional[List[ValueserpPageSchema]]
 
@@ -56,6 +60,7 @@ class ValueserpPaginationSchema(BaseModel):
     """
     Pagination schema for Valueserp API.
     """
+
     api_pagination: ValueserpAPIPaginationSchema
 
 
@@ -69,8 +74,11 @@ class ValueserpResponseSchema(BaseModel):
         items: List[dict]
             The list of search results
     """
+
     pagination: ValueserpPaginationSchema
-    items: Optional[List[ValueserpItemSchema]] = Field(alias="organic_results", default=[])
+    items: Optional[List[ValueserpItemSchema]] = Field(
+        alias="organic_results", default=[]
+    )
 
 
 class ValueserpInputSchema(BaseModel):
@@ -83,6 +91,7 @@ class ValueserpInputSchema(BaseModel):
         time_period: Optional[TimePeriod]
             The time period to filter the search results by.
     """
+
     query: str
     time_period: Optional[TimePeriod] = None
 
@@ -97,6 +106,7 @@ class ValueserpRequestSchema(ValueserpInputSchema):
         num: Optional[int]
             The number of results to return per page
     """
+
     page: Optional[int] = 1
     num: Optional[int] = 100
 

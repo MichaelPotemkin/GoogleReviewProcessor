@@ -4,7 +4,11 @@ from urllib.parse import urlencode
 import aiohttp
 
 from app.core.config import settings
-from app.schemas.valueserp_search import TimePeriod, ValueserpResponseSchema, ValueserpRequestSchema
+from app.schemas.valueserp_search import (
+    TimePeriod,
+    ValueserpRequestSchema,
+    ValueserpResponseSchema,
+)
 
 
 class ValueserpClient:
@@ -13,28 +17,28 @@ class ValueserpClient:
 
     @classmethod
     def construct_url(
-            cls,
-            query: str,
-            page: int,
-            num: int,
-            time_period: Optional[TimePeriod] = None,
+        cls,
+        query: str,
+        page: int,
+        num: int,
+        time_period: Optional[TimePeriod] = None,
     ) -> str:
         params = {
-            'api_key': cls.API_KEY,
-            'q': query,
-            'page': page,
-            'num': num,
+            "api_key": cls.API_KEY,
+            "q": query,
+            "page": page,
+            "num": num,
         }
         if time_period:
-            params['time_period'] = 'custom'
-            params['min_time'] = time_period.min_time
-            params['max_time'] = time_period.max_time
+            params["time_period"] = "custom"
+            params["min_time"] = time_period.min_time
+            params["max_time"] = time_period.max_time
 
         return f"{cls.BASE_URL}?{urlencode(params)}"
 
     async def search(
-            self,
-            data: ValueserpRequestSchema,
+        self,
+        data: ValueserpRequestSchema,
     ) -> ValueserpResponseSchema:
         url = self.construct_url(
             query=data.query,

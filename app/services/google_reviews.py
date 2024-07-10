@@ -35,7 +35,6 @@ class GoogleReviewsService:
             )
         return GoogleReviewsResultsSchema(**data.model_dump())
 
-
     @classmethod
     def remove_duplicates(
         cls, data: GoogleReviewsResultsSchema
