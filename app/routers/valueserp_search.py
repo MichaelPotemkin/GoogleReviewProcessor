@@ -23,7 +23,6 @@ async def search(
     query: str,
     min_time: Optional[str] = None,
     max_time: Optional[str] = None,
-    # TODO: add dates
     service: ValueserpService = Depends(ValueserpService),
 ):
     """
