@@ -31,6 +31,10 @@ async def search(
     Parameters:
         query: str
             The search query
+        min_time: Optional[str]
+            The minimum time period to filter the search results by.
+        max_time: Optional[str]
+            The maximum time period to filter the search results by.
     """
     try:
         if xor(min_time is None, max_time is None):
