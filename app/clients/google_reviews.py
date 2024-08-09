@@ -32,6 +32,17 @@ class GoogleReviewsClient:
     async def get_reviews(
         self, request_data: GoogleReviewsRequestSchema
     ) -> GoogleReviewsSchema:
+        """
+        Get reviews from the Google API
+
+        Parameters:
+            request_data: GoogleReviewsRequestSchema
+                The request data
+
+        Returns:
+            GoogleReviewsSchema
+                The reviews schema
+        """
         url = self.construct_url(
             query=request_data.query,
             cx=request_data.cx,
