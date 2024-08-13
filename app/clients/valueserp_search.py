@@ -23,6 +23,23 @@ class ValueserpClient:
         num: int,
         time_period: Optional[TimePeriodSchema] = None,
     ) -> str:
+        """
+        Construct the URL for the Valueserp API
+
+        Parameters:
+            query: str
+                The search query
+            page: int
+                The page number
+            num: int
+                The number of results to return per page
+            time_period: Optional[TimePeriodSchema]
+                The time period to filter the search results by.
+
+        Returns:
+            str
+                The constructed URL
+        """
         params = {
             "api_key": cls.API_KEY,
             "q": query,
@@ -40,6 +57,17 @@ class ValueserpClient:
         self,
         data: ValueserpRequestSchema,
     ) -> ValueserpResponseSchema:
+        """
+        Search for domains using the Valueserp API
+
+        Parameters:
+            data: ValueserpRequestSchema
+                The request data
+
+        Returns:
+            ValueserpResponseSchema
+                The response schema
+        """
         url = self.construct_url(
             query=data.query,
             page=data.page,
